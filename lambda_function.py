@@ -56,6 +56,7 @@ def compute_doc_index(keys_raw, deserializer):
 
 def _lambda_handler(event, context):
    logger.info('Event:'+json.dumps(event))
+   logger.info('Context:'+json.dumps(context))
    records = event['Records']
    now = datetime.datetime.utcnow()
    
@@ -110,18 +111,12 @@ def _lambda_handler(event, context):
 
          # Now only store own post and replies
          if doc_fields['object_type']=='post' and str(doc_fields['user_id'])!=cf.twitter_user_id:
-            print("Not own post")
             continue
             
-         print(doc_fields['object_type']=='comment')
-         print(str(doc_fields['asset_id'])!=cf.twitter_user_id)
          # Now only store own post and replies
          if doc_fields['object_type']=='comment' and doc_fields['asset_id']!=str(cf.twitter_user_id):
-            print("Not own comment")
             continue
-            
-         print(doc_fields)
-         
+                     
          # Normalize DynamoDB object to Mysql object and write to RDS
          normalizer_mysql.insert_dynamodb_item_into_mysql(cf,doc_fields)           
          
