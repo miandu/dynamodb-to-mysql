@@ -6,10 +6,12 @@ import datetime
 import json
 import logging
 import os
+import sys
 import time
 import traceback
 import urllib
 import urllib.parse 
+sys.path.append(os.path.join(os.path.dirname(__file__), "libs"))
 
 from botocore.auth import SigV4Auth
 from botocore.awsrequest import AWSRequest

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import argparse,boto3,json,decimal,sys,os,random
-sys.path.append("libs")
+sys.path.append(os.path.join(os.path.dirname(__file__), "libs"))
 from progress.bar import Bar
 from boto3.dynamodb.conditions import Attr
 from elasticsearch import Elasticsearch
