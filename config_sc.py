@@ -26,5 +26,3 @@ class Config(general_config.Config):
     ## ES
     es_host='https://search-client-sc-om2a3opn6w4htnju5yxpkkjfou.eu-west-1.es.amazonaws.com'
 
-    ##RDS MySQL
-    #table_name='twit_posts'

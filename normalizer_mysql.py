@@ -108,6 +108,17 @@ def insert_dynamodb_item_into_mysql(cf,i):
     connection = general_storage_mysql.create_connection(cf)
     attributes,values = general_storage_mysql.simple_json_to_mysql_query(nl.target)
     query="insert into twit_%s_%s(%s) values(%s)" %(nl.name,cf.client_short_name,attributes,values)
+    print(query)
+    general_storage_mysql.execute_query(connection,query)
+
+def delete_mysql_item(cf,i):
+    ## Main function to call deleteitem to mysql database
+    if i['object_type']=='post':
+        query="delete from twit_posts_%s(%s) where post_id=%s" %(cf.client_short_name,i['object_id'])
+    else:
+        query="delete from twit_comments_%s(%s) where comment_id=%s" %(cf.client_short_name,i['object_id'])
+
+    connection = general_storage_mysql.create_connection(cf)
     general_storage_mysql.execute_query(connection,query)
 
 if __name__ == "__main__":
