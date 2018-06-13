@@ -36,7 +36,7 @@ class Normalizer():
         return utils.fix_data_to_string({
             "created_time" : item["created_time"],
             "message":item['message'],
-            "from" : author
+            "from" : json.loads(author)
         })
         
     def get_author(self,item):
@@ -108,7 +108,7 @@ def insert_dynamodb_item_into_mysql(cf,i):
     connection = general_storage_mysql.create_connection(cf)
     attributes,values = general_storage_mysql.simple_json_to_mysql_query(nl.target)
     query="insert into twit_%s_%s(%s) values(%s)" %(nl.name,cf.client_short_name,attributes,values)
-    print(query)
+    #print(query)
     general_storage_mysql.execute_query(connection,query)
 
 def delete_mysql_item(cf,i):
@@ -136,6 +136,7 @@ if __name__ == "__main__":
             query_str = query_str + " AND user_id:%s AND object_type:post" %(cf.twitter_user_id)
         else:
             query_str="user_id:%s AND object_type:post" %(cf.twitter_user_id)
+        print(query_str)
         total,posts = query.query_items(cf,query_str)
         if total>0:
             for post_id in [x["id"] for x in posts]:

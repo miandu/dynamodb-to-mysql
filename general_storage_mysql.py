@@ -29,7 +29,11 @@ def execute_query(connection,query):
         connection.close()
 
 def escape_name(s):
-    return '{}'.format(s.replace('"',"'").replace("\\",""))
+    #return '{}'.format(s.replace('"',"'").replace("\\",""))
+    #return "{}".format(s.replace('"',"\\\""))
+    #print(s)
+    #return str(s)
+    return '{}'.format(s.replace('"','""').replace("\\",""))
 
 def json_value_to_string(value):
     if value:
