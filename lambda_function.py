@@ -26,7 +26,7 @@ import normalizer_mysql
 DOC_TABLE_FORMAT = '{}'         # Python formatter to generate index name from the DynamoDB table name
 DOC_TYPE_FORMAT = '{}_type'     # Python formatter to generate type name from the DynamoDB table name, default is to add '_type' suffix
 DEBUG = True                    # Set verbose debugging information
-config_file = "config_sc"
+config_file = "config_sc_test"
 
 print("Streaming to RDS")
 logger = logging.getLogger()
@@ -58,7 +58,6 @@ def compute_doc_index(keys_raw, deserializer):
 
 def _lambda_handler(event, context):
    logger.info('Event:'+json.dumps(event))
-   logger.info('Context:'+json.dumps(context))
    records = event['Records']
    now = datetime.datetime.utcnow()
    
@@ -103,8 +102,8 @@ def _lambda_handler(event, context):
       else:
          logger.warning('Unsupported event_name: %s', event_name)         
 
-      # If DynamoDB INSERT or MODIFY, send 'item' to RDS
-      if event_name == 'INSERT' or event_name == 'MODIFY':
+      # If DynamoDB INSERT only, send 'item' to RDS
+      if event_name == 'INSERT':
          if 'NewImage' not in ddb:
             logger.warning('Cannot process stream if it does not contain NewImage')
             continue

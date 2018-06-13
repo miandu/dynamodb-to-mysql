@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#print!/usr/bin/python3
 import json,datetime,time,argparse,logging,sys,os
 sys.path.append(os.path.join(os.path.dirname(__file__), "libs"))
 from boto3.dynamodb.conditions import Attr
@@ -108,7 +108,7 @@ def insert_dynamodb_item_into_mysql(cf,i):
     connection = general_storage_mysql.create_connection(cf)
     attributes,values = general_storage_mysql.simple_json_to_mysql_query(nl.target)
     query="insert into twit_%s_%s(%s) values(%s)" %(nl.name,cf.client_short_name,attributes,values)
-    #print(query)
+    logging.info(query)
     general_storage_mysql.execute_query(connection,query)
 
 def delete_mysql_item(cf,i):
