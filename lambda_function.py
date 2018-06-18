@@ -86,7 +86,7 @@ def _lambda_handler(event, context):
       # Dispatch according to event TYPE
       event_name = record['eventName'].upper()  # INSERT, MODIFY, REMOVE
 
-      items,LastEvaluatedKey = general_storage.scan_items(general_storage.get_dynamodb_table('client_configuration'),Attr('client_short_name').eq(doc_table.replace("client_","")))
+      items,LastEvaluatedKey = general_storage.scan_items(general_storage.get_dynamodb_table('client_configuration'),Attr('table_name').eq(doc_table))
       
       cf = general_config.create_configuration(items[0])
 
