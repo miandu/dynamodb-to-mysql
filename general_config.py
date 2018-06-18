@@ -44,6 +44,13 @@ class Config:
     def get_clara_max(item):
         return item.clara_batch_size
 
+def create_configuration(attributes):
+    ## create config object and add all attributes to it
+    config = Config()
+    for attr,value in attributes.items():
+        setattr(config,attr,value)
+    return config
+
 class DevelopmentConfig(Config):
     type='dev'
     consumer_key='5Gh2OUk7fSzsJNfUCcLJg3g4p'

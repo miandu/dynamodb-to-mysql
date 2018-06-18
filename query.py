@@ -39,7 +39,6 @@ def query_items(cf, query,limit=100000,size=10000):
             if this_total>=size:
                 ## go to next round of search by giving the biggest object_id in query
                 query = query + " AND object_id>" + new_items[len(new_items)-1]['object_id']
-                print(query)
     return total,items
 
 def output_replies_to_ids(cf,path,ids):

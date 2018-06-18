@@ -107,7 +107,7 @@ def insert_dynamodb_item_into_mysql(cf,i):
     nl.normalize_source_to_target(cf,i)
     connection = general_storage_mysql.create_connection(cf)
     attributes,values = general_storage_mysql.simple_json_to_mysql_query(nl.target)
-    query="insert into twit_%s_%s(%s) values(%s)" %(nl.name,cf.client_short_name,attributes,values)
+    query="insert into twit_%s_%s_test(%s) values(%s)" %(nl.name,cf.client_short_name,attributes,values)
     logging.info(query)
     general_storage_mysql.execute_query(connection,query)
 
@@ -136,7 +136,6 @@ if __name__ == "__main__":
             query_str = query_str + " AND user_id:%s AND object_type:post" %(cf.twitter_user_id)
         else:
             query_str="user_id:%s AND object_type:post" %(cf.twitter_user_id)
-        print(query_str)
         total,posts = query.query_items(cf,query_str)
         if total>0:
             for post_id in [x["id"] for x in posts]:

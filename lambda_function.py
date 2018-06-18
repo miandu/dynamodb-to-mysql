@@ -19,7 +19,8 @@ from botocore.credentials import get_credentials
 from botocore.endpoint import BotocoreHTTPSession
 from botocore.session import Session
 from boto3.dynamodb.types import TypeDeserializer
-import normalizer_mysql
+from boto3.dynamodb.conditions import Attr
+import normalizer_mysql, general_config, general_storage
 
 
 # The following parameters can be optionally customized
@@ -60,10 +61,7 @@ def _lambda_handler(event, context):
    logger.info('Event:'+json.dumps(event))
    records = event['Records']
    now = datetime.datetime.utcnow()
-   
-   config = __import__(config_file)
-   cf =config.Config() 
-   
+      
    ddb_deserializer = StreamTypeDeserializer()
    cnt_insert = cnt_modify = cnt_remove = 0
    for record in records:
@@ -88,6 +86,10 @@ def _lambda_handler(event, context):
       # Dispatch according to event TYPE
       event_name = record['eventName'].upper()  # INSERT, MODIFY, REMOVE
 
+      items,LastEvaluatedKey = general_storage.scan_items(general_storage.get_dynamodb_table('client_configuration'),Attr('client_short_name').eq(doc_table.replace("client_","")))
+      
+      cf = general_config.create_configuration(items[0])
+
       # Treat events from a Kinesis stream as INSERTs
       if event_name == 'AWS:KINESIS:RECORD':
          event_name = 'INSERT'
@@ -101,7 +103,8 @@ def _lambda_handler(event, context):
          cnt_remove += 1
       else:
          logger.warning('Unsupported event_name: %s', event_name)         
-
+      
+      
       # If DynamoDB INSERT only, send 'item' to RDS
       if event_name == 'INSERT':
          if 'NewImage' not in ddb:
@@ -111,11 +114,11 @@ def _lambda_handler(event, context):
          doc_fields = ddb_deserializer.deserialize({'M': ddb['NewImage']})
 
          # Now only store own post and replies
-         if doc_fields['object_type']=='post' and str(doc_fields['user_id'])!=cf.twitter_user_id:
+         if doc_fields['object_type']=='post' and str(doc_fields['user_id'])!=str(cf.twitter_user_id):
             continue
             
          # Now only store own post and replies
-         if doc_fields['object_type']=='comment' and doc_fields['asset_id']!=str(cf.twitter_user_id):
+         if doc_fields['object_type']=='comment' and str(doc_fields['asset_id'])!=str(cf.twitter_user_id):
             continue
                      
          # Normalize DynamoDB object to Mysql object and write to RDS
@@ -133,12 +136,6 @@ def lambda_handler(event, context):
       logger.error(traceback.format_exc())
 
 if __name__ == "__main__":
-   parser = argparse.ArgumentParser(description='Copying DynamoDB stream to mysql') 
-   parser.add_argument('config', type=str, help='an config file for normalizer')
-   args = parser.parse_args()
-   config_file =args.config
-   config = __import__(config_file)
-   cf =config.Config() 
    with open('event-test.json', 'r') as myfile:
       event = json.loads(myfile.read())
       lambda_handler(event, "")

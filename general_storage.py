@@ -23,6 +23,8 @@ class DecimalEncoder(json.JSONEncoder):
                 return int(o)
         return super(DecimalEncoder, self).default(o)
 
+def get_dynamodb_table(table_name):
+    return dynamodb.Table(table_name)
 
 def create_table(name, key):
     # Create the DynamoDB table.

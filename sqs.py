@@ -123,8 +123,8 @@ def send_task(cf,query_str,task,batch=100,extra={}):
     total,items = query.query_items(cf,query_str)
     if extra.get('type')=='post':
         ## if process type is post, get all replies of the post and send replies to queue        
-        print(process_post_comments(cf,create_messages(batch,task,items,extra),task,batch))
-        print(send_to_queue(cf,task,items,batch,extra))
+        process_post_comments(cf,create_messages(batch,task,items,extra),task,batch)
+        send_to_queue(cf,task,items,batch,extra)
     else:
         ## if process type is general, send the data to queue directly
         #print("Sending to queue:%s" %(len(items)))
