@@ -105,10 +105,17 @@ def insert_dynamodb_item_into_mysql(cf,i):
         nl = Normalizer_comment_dynomodb_mysql()
 
     nl.normalize_source_to_target(cf,i)
-    connection = general_storage_mysql.create_connection(cf)
+    table="twit_%s_%s" %(nl.name,cf.client_short_name)
+
+    ## create table if not exists
+    general_storage_mysql.create_table_if_non_exists(cf,table,like_table=None)
+    ## add columns if not exists
+    general_storage_mysql.add_columns_if_non_exists(cf,table,nl.target)    
+
     attributes,values = general_storage_mysql.simple_json_to_mysql_query(nl.target)
-    query="insert into twit_%s_%s_test(%s) values(%s)" %(nl.name,cf.client_short_name,attributes,values)
+    query="insert into %s(%s) values(%s)" %(table,attributes,values)
     logging.info(query)
+    connection = general_storage_mysql.create_connection(cf)
     general_storage_mysql.execute_query(connection,query)
 
 def delete_mysql_item(cf,i):

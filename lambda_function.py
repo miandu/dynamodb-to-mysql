@@ -4,7 +4,6 @@ import argparse
 import base64
 import datetime
 import json
-import logging
 import os
 import sys
 import time
@@ -21,17 +20,14 @@ from botocore.session import Session
 from boto3.dynamodb.types import TypeDeserializer
 from boto3.dynamodb.conditions import Attr
 import normalizer_mysql, general_config, general_storage
-
+from logger import logger
 
 # The following parameters can be optionally customized
 DOC_TABLE_FORMAT = '{}'         # Python formatter to generate index name from the DynamoDB table name
 DOC_TYPE_FORMAT = '{}_type'     # Python formatter to generate type name from the DynamoDB table name, default is to add '_type' suffix
-DEBUG = True                    # Set verbose debugging information
 config_file = "config_sc_test"
 
 print("Streaming to RDS")
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG if DEBUG else logging.INFO)
 
 
 # Subclass of boto's TypeDeserializer for DynamoDB to adjust for DynamoDB Stream format.
