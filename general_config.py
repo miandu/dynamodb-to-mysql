@@ -23,9 +23,7 @@ class Config:
     minimum_lang_probability=0.6
     
     ## Clara
-    #clara_params={"classifiers" : "utag-extract,utag-remove,spam,langdet,translate,positive"}
     clara_params={"classifiers" : "utag-extract,utag-remove,langdet,translate,positive,negative,spam,sexual,other, piracy, statsent_neutral, non_harmful_zero, non_harmful_zero_ext, nnmalware, non_harmful, nh_positive, statsent_simplified_neutral, nnpii, nnaddme, pii, random, profanity_mild, nnhcm, hcm, statsent_positive, statsent_highpositive, discrimination, statsent_simplified_positive, nnprofanity, unauth_selling, statsent_simplified_negative, profanity_extreme, drugs, statsent_highnegative, statsent_undefined, protest, nnspam, vpn, statsent_negative", "allow_meta":"true"}
-    #clara_params={"classifiers" : "utag-extract,utag-remove,langdet,translate,positive,negative,spam,sexual", "allow_meta":"true"}
     clara_api_url_base='http://clara.staging.mod-app.com/clara/test/'
     clara_api_headers = {'Content-Type': 'application/json'}
     clara_batch_size=50
