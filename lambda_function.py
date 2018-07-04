@@ -25,7 +25,7 @@ from logger import logger
 # The following parameters can be optionally customized
 DOC_TABLE_FORMAT = '{}'         # Python formatter to generate index name from the DynamoDB table name
 DOC_TYPE_FORMAT = '{}_type'     # Python formatter to generate type name from the DynamoDB table name, default is to add '_type' suffix
-config_file = "config_sc_test"
+#config_file = "config_sc_test"
 
 print("Streaming to RDS")
 
